@@ -1,8 +1,8 @@
-from src.Gaits import GaitController
-from src.StanceController import StanceController
-from src.SwingLegController import SwingController
-from src.Utilities import clipped_first_order_filter
-from src.State import BehaviorState, State
+from common.Gaits import GaitController
+from common.StanceController import StanceController
+from common.SwingLegController import SwingController
+from common.Utilities import clipped_first_order_filter
+from common.State import BehaviorState, State
 
 import numpy as np
 from transforms3d.euler import euler2mat, quat2euler
