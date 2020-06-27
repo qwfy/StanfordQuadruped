@@ -10,13 +10,16 @@ class State:
         self.pitch = 0.0
         self.roll = 0.0
         self.activation = 0
+        # when running on the physical robot
         self.behavior_state = BehaviorState.REST
+        # when running on the simulator
+        # self.behavior_state = BehaviorState.DEACTIVATED
+        # self.quat_orientation = np.array([1, 0, 0, 0])
 
         self.ticks = 0
         self.foot_locations = np.zeros((3, 4))
         self.joint_angles = np.zeros((3, 4))
 
-        self.behavior_state = BehaviorState.REST
 
 
 class BehaviorState(Enum):
