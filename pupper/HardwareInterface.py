@@ -88,15 +88,18 @@ def send_servo_commands(pi, pwm_params, servo_params, joint_angles):
                 axis_index,
                 leg_index,
             )
-            pi.set_PWM_dutycycle(pwm_params.pins[axis_index, leg_index], duty_cycle)
+            pin = pwm_params.pins[axis_index, leg_index]
+            pi.set_PWM_dutycycle(pin, duty_cycle)
 
 
 def send_servo_command(pi, pwm_params, servo_params, joint_angle, axis, leg):
     duty_cycle = angle_to_duty_cycle(joint_angle, pwm_params, servo_params, axis, leg)
-    pi.set_PWM_dutycycle(pwm_params.pins[axis, leg], duty_cycle)
+    pin = pwm_params.pins[axis, leg]
+    pi.set_PWM_dutycycle(pin, duty_cycle)
 
 
 def deactivate_servos(pi, pwm_params):
     for leg_index in range(4):
         for axis_index in range(3):
-            pi.set_PWM_dutycycle(pwm_params.pins[axis_index, leg_index], 0)
+            pin = pwm_params.pins[axis_index, leg_index]
+            pi.set_PWM_dutycycle(pin, 0)

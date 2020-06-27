@@ -6,10 +6,11 @@ from enum import Enum
 class PWMParams:
     def __init__(self):
         self.pins = np.array([
+            # front-right front-left back-right back-left
             # J123 J456 J789 J101112
-            [2, 14, 18, 23],
-            [3, 15, 27, 24],
-            [4, 17, 22, 25]])
+            [2, 14, 18, 23], # abduction
+            [3, 15, 27, 24], # inner
+            [4, 17, 22, 25]])# outer
         self.range = 4000
         self.freq = 250
 
@@ -88,7 +89,7 @@ class Configuration:
         self.LEG_LR = 0.04  # left-right distance from center line to leg plane
         self.LEG_L2 = 0.115
         self.LEG_L1 = 0.1235
-        self.ABDUCTION_OFFSET = 0.03  # distance from abduction axis to leg
+        self.ABDUCTION_OFFSET = 0.06  # distance from abduction axis to leg
         self.FOOT_RADIUS = 0.01
 
         self.HIP_L = 0.0394
