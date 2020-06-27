@@ -1,0 +1,14 @@
+Product name:          CLS6336HV 35kg Aluminium Shell Metal gear High Voltage Coreless Digital Servo
+Brand:                 JX Servo
+Model:                 CLS6336HV
+Dead band:             1μs
+Working frequency:     1520μs / 330hz
+Motor:                 Coreless
+Operating Speed 6.6v:  0.14 sec/60°
+Operating Speed 7.4v:  0.11 sec/60°
+Stall Torque 6.6v:     27.8 kg.cm
+Stall Torque 7.4v:     35.6 kg.cm
+Dimensions:            40.5X20.2X40mm
+Weight:                63 g
+Wire/Color:            JR 265 mm / - Brown + Red S Orange
+Bearing:               2BB
