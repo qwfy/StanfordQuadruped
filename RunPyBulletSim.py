@@ -12,7 +12,7 @@ from common.State import State
 from sim.HardwareInterface import HardwareInterface
 from pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
-
+import common
 
 def main(use_imu=False, default_velocity=np.zeros(2), default_yaw_rate=0.0):
     # Create config
@@ -28,6 +28,9 @@ def main(use_imu=False, default_velocity=np.zeros(2), default_yaw_rate=0.0):
     # Create controller and user input handles
     controller = Controller(config, four_legs_inverse_kinematics,)
     state = State()
+    state.behavior_state = common.State.BehaviorState.DEACTIVATED
+    state.quat_orientation = np.array([1, 0, 0, 0])
+
     command = Command()
 
     # Emulate the joystick inputs required to activate the robot
