@@ -34,7 +34,7 @@ def main(default_velocity=np.zeros(2), default_yaw_rate=0.0):
     simulation_config=pupper.config.SimulationConfig(),
     )
 
-  model = mujoco_py.load_model_from_path(pupper.config.SimulationConfig().XML_OUT)
+  model = mujoco_py.load_model_from_path("sim/pupper_pybullet_out.xml")
   simulator = mujoco_py.MjSim(model)
   viewer = mujoco_py.MjViewer(simulator)
 
