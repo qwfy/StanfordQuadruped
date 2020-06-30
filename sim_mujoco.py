@@ -28,7 +28,7 @@ def parallel_to_serial_joint_angles(joint_matrix):
   return temp
 
 
-def main(default_velocity=np.zeros(2), default_yaw_rate=0.0):
+def main(use_imu=False, default_velocity=np.zeros(2), default_yaw_rate=0.0):
   sim.gen_mjcf.generate(
     pupper_config=pupper.config.Configuration(),
     simulation_config=pupper.config.SimulationConfig(),
@@ -41,10 +41,12 @@ def main(default_velocity=np.zeros(2), default_yaw_rate=0.0):
   # Create config
   config = pupper.config.Configuration()
   config.z_clearance = 0.02
-  # hardware_interface = HardwareInterface(sim.model, sim.joint_indices)
+
+  if use_imu:
+    imu = sim.imu.IMU()
 
   # Create controller and user input handles
-  controller = common.controller.Controller(config, pupper.kinematics.four_legs_inverse_kinematics, )
+  controller = common.controller.Controller(config, pupper.kinematics.four_legs_inverse_kinematics)
   state = common.state.State()
   state.behavior_state = common.state.BehaviorState.DEACTIVATED
   state.quat_orientation = np.array([1, 0, 0, 0])
@@ -70,11 +72,6 @@ def main(default_velocity=np.zeros(2), default_yaw_rate=0.0):
   command.horizontal_velocity = default_velocity
   command.yaw_rate = default_yaw_rate
 
-  # The joystick service is linux-only, so commenting out for mac
-  # print("Creating joystick listener...")
-  # joystick_interface = JoystickInterface(config)
-  # print("Done.")
-
   print("Summary of gait parameters:")
   print("overlap time: ", config.overlap_time)
   print("swing time: ", config.swing_time)
@@ -94,13 +91,12 @@ def main(default_velocity=np.zeros(2), default_yaw_rate=0.0):
     if sim_time_elapsed - last_control_update > config.dt:
       last_control_update = sim_time_elapsed
 
-      state.quat_orientation = np.array([1, 0, 0, 0])
-
+      # Get IMU measurement if enabled
+      state.quat_orientation = (
+        imu.read_orientation() if use_imu else np.array([1, 0, 0, 0])
+      )
       # Step the controller forward by dt
       controller.run(state, command)
-
-      # Update the pwm widths going to the servos
-      # hardware_interface.set_actuator_postions(state.joint_angles)
 
       # Convert from joint angles meant for a parallel linkage to the serial linkage implemented in Mujoco
       simulator.data.ctrl[:] = parallel_to_serial_joint_angles(
