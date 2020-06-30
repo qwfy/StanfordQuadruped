@@ -17,7 +17,7 @@ def main(use_imu=False, default_velocity=np.zeros(2), default_yaw_rate=0.0):
   # Create config
   config = Configuration()
   config.z_clearance = 0.02
-  sim = Sim(xml_path="sim/pupper_pybullet_out.xml")
+  sim = Sim(xml_path="sim/pupper_pybullet.xml")
   hardware_interface = HardwareInterface(sim.model, sim.joint_indices)
 
   # Create imu handle
