@@ -199,8 +199,8 @@ class Configuration:
         
 class SimulationConfig:
     def __init__(self):
-        self.XML_IN = "pupper.xml"
-        self.XML_OUT = "pupper_out.xml"
+        self.XML_IN = "sim/pupper_template.xml"
+        self.XML_OUT = "sim/pupper_out.xml"
 
         self.START_HEIGHT = 0.3
         self.MU = 1.5  # coeff friction

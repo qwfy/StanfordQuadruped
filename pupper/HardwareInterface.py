@@ -1,4 +1,9 @@
-import pigpio
+# when running on a PC, pigpio may not be installed
+try:
+    import pigpio
+except ImportError:
+    pigpio = None
+
 from pupper.Config import ServoParams, PWMParams
 
 
