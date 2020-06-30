@@ -1,12 +1,7 @@
 import numpy as np
 
-from pupper.hardware_config import MICROS_PER_RAD
-from pupper.hardware_config import NEUTRAL_ANGLE_DEGREES
-from pupper.hardware_config import PS4_COLOR
-from pupper.hardware_config import PS4_DEACTIVATED_COLOR
+from . import hardware_config
 
-
-# TODO: put these somewhere else
 class PWMParams:
   def __init__(self):
     self.pins = np.array([
@@ -22,10 +17,10 @@ class PWMParams:
 class ServoParams:
   def __init__(self):
     self.neutral_position_pwm = 1500  # Middle position
-    self.micros_per_rad = MICROS_PER_RAD  # Must be calibrated
+    self.micros_per_rad = hardware_config.MICROS_PER_RAD  # Must be calibrated
 
     # The neutral angle of the joint relative to the modeled zero-angle in degrees, for each joint
-    self.neutral_angle_degrees = NEUTRAL_ANGLE_DEGREES
+    self.neutral_angle_degrees = hardware_config.NEUTRAL_ANGLE_DEGREES
 
     self.servo_multipliers = np.array(
       [[1, 1, 1, 1], [-1, 1, -1, 1], [1, -1, 1, -1]]
@@ -39,8 +34,8 @@ class ServoParams:
 class Configuration:
   def __init__(self):
     ################# CONTROLLER BASE COLOR ##############
-    self.ps4_color = PS4_COLOR
-    self.ps4_deactivated_color = PS4_DEACTIVATED_COLOR
+    self.ps4_color = hardware_config.PS4_COLOR
+    self.ps4_deactivated_color = hardware_config.PS4_DEACTIVATED_COLOR
 
     #################### COMMANDS ####################
     self.max_x_velocity = 0.4
