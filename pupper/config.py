@@ -6,10 +6,11 @@ class PWMParams:
   def __init__(self):
     self.pins = np.array([
       # front-right front-left back-right back-left
-      # J123 J456 J789 J101112
+      # J123        J456       J789       J101112
       [2, 14, 18, 23],  # abduction
       [3, 15, 27, 24],  # inner
-      [4, 17, 22, 25]])  # outer
+      [4, 17, 22, 25]]  # outer
+      )
     self.range = 4000
     self.freq = 250
 
@@ -22,9 +23,12 @@ class ServoParams:
     # The neutral angle of the joint relative to the modeled zero-angle in degrees, for each joint
     self.neutral_angle_degrees = hardware_config.NEUTRAL_ANGLE_DEGREES
 
+    # @formatter:off
     self.servo_multipliers = np.array(
-      [[1, 1, 1, 1], [-1, 1, -1, 1], [1, -1, 1, -1]]
-      )
+      [[ 1,  1,  1,  1],
+       [-1,  1, -1,  1],
+       [ 1, -1,  1, -1]])
+    # @formatter:on
 
   @property
   def neutral_angles(self):
@@ -74,7 +78,10 @@ class Configuration:
     self.dt = 0.01
     self.num_phases = 4
     self.contact_phases = np.array(
-      [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
+      [[1, 1, 1, 0],
+       [1, 0, 1, 1],
+       [1, 0, 1, 1],
+       [1, 1, 1, 0]]
       )
     self.overlap_time = (
       0.10  # duration of the phase where all four feet are on the ground
@@ -141,14 +148,12 @@ class Configuration:
   def default_stance(self):
     return np.array(
       [
-        [
-          self.delta_x + self.x_shift,
-          self.delta_x + self.x_shift,
-          -self.delta_x + self.x_shift,
-          -self.delta_x + self.x_shift,
-          ],
+        [self.delta_x + self.x_shift,
+         self.delta_x + self.x_shift,
+         -self.delta_x + self.x_shift,
+         -self.delta_x + self.x_shift],
         [-self.delta_y, self.delta_y, -self.delta_y, self.delta_y],
-        [0, 0, 0, 0],
+        [0, 0, 0, 0]
         ]
       )
 
