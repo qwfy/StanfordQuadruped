@@ -93,7 +93,7 @@ class Configuration:
     self.LEG_LR = 0.04  # left-right distance from center line to leg plane
     self.LEG_L2 = 0.115
     self.LEG_L1 = 0.1235
-    self.ABDUCTION_OFFSET = 0.06  # distance from abduction axis to leg
+    self.ABDUCTION_OFFSET = 0.03  # distance from abduction axis to leg
     self.FOOT_RADIUS = 0.01
 
     self.HIP_L = 0.0394

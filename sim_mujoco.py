@@ -1,10 +1,13 @@
 import mujoco_py
 import numpy as np
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 import common
 import pupper
 import sim
 
+logger = logging.getLogger(__name__)
 
 def parallel_to_serial_joint_angles(joint_matrix):
   """Convert from joint angles meant for the parallel linkage in
@@ -47,7 +50,7 @@ def main(default_velocity=np.zeros(2), default_yaw_rate=0.0):
   state.quat_orientation = np.array([1, 0, 0, 0])
 
   # Initialize joint angles
-  simulator.data.qpos[7:] = parallel_to_serial_joint_angles(
+  simulator.data.qpos[0:12] = parallel_to_serial_joint_angles(
     state.joint_angles
     ).T.reshape(12)
   # Set the robot to be above the floor to begin with
