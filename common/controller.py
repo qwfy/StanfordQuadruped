@@ -2,11 +2,7 @@ import numpy as np
 from transforms3d.euler import euler2mat
 from transforms3d.euler import quat2euler
 
-from common.gaits import GaitController
-from common.stance_controller import StanceController
-from common.state import BehaviorState
-from common.swing_leg_controller import SwingController
-from common.utility import clipped_first_order_filter
+import common
 
 
 class Controller:
@@ -24,17 +20,17 @@ class Controller:
     self.inverse_kinematics = inverse_kinematics
 
     self.contact_modes = np.zeros(4)
-    self.gait_controller = GaitController(self.config)
-    self.swing_controller = SwingController(self.config)
-    self.stance_controller = StanceController(self.config)
+    self.gait_controller = common.gaits.GaitController(self.config)
+    self.swing_controller = common.swing_leg_controller.SwingController(self.config)
+    self.stance_controller = common.stance_controller.StanceController(self.config)
 
-    self.hop_transition_mapping = {BehaviorState.REST     : BehaviorState.HOP,
-                                   BehaviorState.HOP      : BehaviorState.FINISHHOP,
-                                   BehaviorState.FINISHHOP: BehaviorState.REST, BehaviorState.TROT: BehaviorState.HOP}
-    self.trot_transition_mapping = {BehaviorState.REST: BehaviorState.TROT, BehaviorState.TROT: BehaviorState.REST,
-                                    BehaviorState.HOP : BehaviorState.TROT, BehaviorState.FINISHHOP: BehaviorState.TROT}
-    self.activate_transition_mapping = {BehaviorState.DEACTIVATED: BehaviorState.REST,
-                                        BehaviorState.REST       : BehaviorState.DEACTIVATED}
+    self.hop_transition_mapping = {common.state.BehaviorState.REST     : common.state.BehaviorState.HOP,
+                                   common.state.BehaviorState.HOP      : common.state.BehaviorState.FINISHHOP,
+                                   common.state.BehaviorState.FINISHHOP: common.state.BehaviorState.REST, common.state.BehaviorState.TROT: common.state.BehaviorState.HOP}
+    self.trot_transition_mapping = {common.state.BehaviorState.REST: common.state.BehaviorState.TROT, common.state.BehaviorState.TROT: common.state.BehaviorState.REST,
+                                    common.state.BehaviorState.HOP : common.state.BehaviorState.TROT, common.state.BehaviorState.FINISHHOP: common.state.BehaviorState.TROT}
+    self.activate_transition_mapping = {common.state.BehaviorState.DEACTIVATED: common.state.BehaviorState.REST,
+                                        common.state.BehaviorState.REST       : common.state.BehaviorState.DEACTIVATED}
 
   def step_gait(self, state, command):
     """Calculate the desired foot locations for the next timestep
@@ -81,7 +77,7 @@ class Controller:
     elif command.hop_event:
       state.behavior_state = self.hop_transition_mapping[state.behavior_state]
 
-    if state.behavior_state == BehaviorState.TROT:
+    if state.behavior_state == common.state.BehaviorState.TROT:
       state.foot_locations, contact_modes = self.step_gait(
         state,
         command,
@@ -109,7 +105,7 @@ class Controller:
         rotated_foot_locations, self.config
         )
 
-    elif state.behavior_state == BehaviorState.HOP:
+    elif state.behavior_state == common.state.BehaviorState.HOP:
       state.foot_locations = (
         self.config.default_stance
         + np.array([0, 0, -0.09])[:, np.newaxis]
@@ -118,7 +114,7 @@ class Controller:
         state.foot_locations, self.config
         )
 
-    elif state.behavior_state == BehaviorState.FINISHHOP:
+    elif state.behavior_state == common.state.BehaviorState.FINISHHOP:
       state.foot_locations = (
         self.config.default_stance
         + np.array([0, 0, -0.22])[:, np.newaxis]
@@ -127,11 +123,11 @@ class Controller:
         state.foot_locations, self.config
         )
 
-    elif state.behavior_state == BehaviorState.REST:
+    elif state.behavior_state == common.state.BehaviorState.REST:
       yaw_proportion = command.yaw_rate / self.config.max_yaw_rate
       self.smoothed_yaw += (
         self.config.dt
-        * clipped_first_order_filter(
+        * common.utility.clipped_first_order_filter(
         self.smoothed_yaw,
         yaw_proportion * -self.config.max_stance_yaw,
         self.config.max_stance_yaw_rate,

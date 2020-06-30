@@ -2,13 +2,9 @@ import time
 
 import numpy as np
 
-from common.controller import Controller
-from common.imu import IMU
-from common.joystick_interface import JoystickInterface
-from common.state import State
-from pupper.config import Configuration
-from pupper.hardware_interface import HardwareInterface
-from pupper.kinematics import four_legs_inverse_kinematics
+import common
+import pupper
+
 
 
 def main(use_imu=False):
@@ -16,22 +12,22 @@ def main(use_imu=False):
   """
 
   # Create config
-  config = Configuration()
-  hardware_interface = HardwareInterface()
+  config = pupper.config.Configuration()
+  hardware_interface = pupper.hardware_interface.HardwareInterface()
 
   # Create imu handle
   if use_imu:
-    imu = IMU(port="/dev/ttyACM0")
+    imu = common.imu.IMU(port="/dev/ttyACM0")
     imu.flush_buffer()
 
   # Create controller and user input handles
-  controller = Controller(
+  controller = common.controller.Controller(
     config,
-    four_legs_inverse_kinematics,
+    pupper.kinematics.four_legs_inverse_kinematics,
     )
-  state = State()
+  state = common.state.State()
   print("Creating joystick listener...")
-  joystick_interface = JoystickInterface(config)
+  joystick_interface = common.joystick_interface.JoystickInterface(config)
   print("Done.")
 
   last_loop = time.time()

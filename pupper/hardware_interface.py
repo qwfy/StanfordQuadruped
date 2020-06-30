@@ -4,15 +4,11 @@ try:
 except ImportError:
   pigpio = None
 
-from pupper.config import PWMParams
-from pupper.config import ServoParams
-
-
 class HardwareInterface:
   def __init__(self):
     self.pi = pigpio.pi()
-    self.pwm_params = PWMParams()
-    self.servo_params = ServoParams()
+    self.pwm_params = pupper.config.PWMParams()
+    self.servo_params = pupper.config.ServoParams()
     initialize_pwm(self.pi, self.pwm_params)
 
   def set_actuator_postions(self, joint_angles):
@@ -29,8 +25,8 @@ def pwm_to_duty_cycle(pulsewidth_micros, pwm_params):
   ----------
   pulsewidth_micros : float
       Width of the pwm signal in microseconds
-  pwm_params : PWMParams
-      PWMParams object
+  pwm_params : pupper.config.PWMParams
+      pupper.config.PWMParams object
 
   Returns
   -------
@@ -47,8 +43,8 @@ def angle_to_pwm(angle, servo_params, axis_index, leg_index):
   ----------
   angle : float
       Desired servo angle, relative to the vertical (z) axis
-  servo_params : ServoParams
-      ServoParams object
+  servo_params : pupper.config.ServoParams
+      pupper.config.ServoParams object
   axis_index : int
       Specifies which joint of leg to control. 0 is abduction servo, 1 is inner hip servo, 2 is outer hip servo.
   leg_index : int

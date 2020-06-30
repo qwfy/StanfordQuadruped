@@ -1,10 +1,7 @@
 import numpy as np
 
 import UDPComms
-from common.command import Command
-from common.state import BehaviorState
-from common.utility import clipped_first_order_filter
-from common.utility import deadband
+import common
 
 
 class JoystickInterface:
@@ -13,7 +10,7 @@ class JoystickInterface:
     ):
     self.config = config
     self.previous_gait_toggle = 0
-    self.previous_state = BehaviorState.REST
+    self.previous_state = common.state.BehaviorState.REST
     self.previous_hop_toggle = 0
     self.previous_activate_toggle = 0
 
@@ -24,7 +21,7 @@ class JoystickInterface:
   def get_command(self, state, do_print=False):
     try:
       msg = self.udp_handle.get()
-      command = Command()
+      command = common.command.Command()
 
       ####### Handle discrete commands ########
       # Check if requesting a state transition to trotting, or from trotting to resting
@@ -53,10 +50,10 @@ class JoystickInterface:
       message_dt = 1.0 / message_rate
 
       pitch = msg["ry"] * self.config.max_pitch
-      deadbanded_pitch = deadband(
+      deadbanded_pitch = common.utility.deadband(
         pitch, self.config.pitch_deadband
         )
-      pitch_rate = clipped_first_order_filter(
+      pitch_rate = common.utility.clipped_first_order_filter(
         state.pitch,
         deadbanded_pitch,
         self.config.max_pitch_rate,
@@ -75,7 +72,7 @@ class JoystickInterface:
     except UDPComms.timeout:
       if do_print:
         print("UDP Timed out")
-      return Command()
+      return common.command.Command()
 
   def set_color(self, color):
     joystick_msg = {"ps4_color": color}
